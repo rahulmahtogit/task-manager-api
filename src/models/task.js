@@ -8,7 +8,7 @@ const taskSchema = new mongoose.Schema({
     },
     completed:{
         type:Boolean,
-        default:0
+        default:false
     },
     owner:{
         type:mongoose.Schema.Types.ObjectId,

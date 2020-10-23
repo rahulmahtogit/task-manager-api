@@ -3,19 +3,15 @@ const User = require('../models/user')
 const auth = require('../middleware/auth')
 const multer = require('multer')
 const sharp = require('sharp')
-const { bulkWrite } = require('../models/user')
+
 
 const router = new express.Router()
-
-
 
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
     try {
         await user.save()
         const token = await user.generateAuthToken()
-
-
 
         res.send({ user, token })
     } catch (e) {
@@ -41,7 +37,7 @@ router.post('/users/login', async (req, res) => {
 })
 
 router.post('/users/logout',auth, async(req,res)=>{
-      
+
       try {
         req.user.tokens = req.user.tokens.filter((token)=>{
             return token.token !== req.token
@@ -55,7 +51,7 @@ router.post('/users/logout',auth, async(req,res)=>{
         res.status(500).send()
           
       }
-})
+ })
 
 router.post('/users/logoutAll',auth,async (req,res)=>{
     try {
@@ -81,7 +77,7 @@ router.get('/users/me', auth, async (req, res) => {
 router.get('/users/:id', async (req, res) => {
     const _id = req.params.id
     try {
-        const user = await User.findById(_id)
+         const user = await User.findById(_id)
         if (!user) {
             return res.status(404).send()
         }
@@ -125,14 +121,7 @@ router.delete('/users/me',auth, async (req, res) => {
     try {
 
         await req.user.populate('tasks').execPopulate()
-        
-
-        
-        await req.user.remove()
-        
-        
-
-       
+        await req.user.remove()     
         res.send(req.user)
 
     } catch (e) {
@@ -157,12 +146,18 @@ const upload = multer({
         cb(undefined,true)
     }
 })
+
 router.post('/users/me/avatar',auth, upload.single('avatar'), async (req,res)=>{
     const buffer = await sharp(req.file.buffer).resize({ width:150, height:150 }).png().toBuffer()
         req.user.avatar = buffer
+
         await req.user.save()
         res.send()
     
+        // req.user.avatar = req.file.buffer / Incoming files from Client Side or Postman
+        // await req.user.save()
+  
+
     },(error,req,res,next)=>{
         res.status(400).send({error:error.message})
  
@@ -184,14 +179,17 @@ router.get('/users/:id/avatar',async (req,res)=>{
         res.send(user.avatar)
         
     } catch (e) {
-        res,status(404).send()
+        res.status(404).send()
         
     }
 
 })
 
 
+router.post('/testing',(req,res)=>{
+    res.send("hello")
 
+})
 
 
 module.exports = router

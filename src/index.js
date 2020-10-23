@@ -41,20 +41,22 @@ app.listen(port,()=>{
 //     res.send()
 
 // })
-// const Task = require('./models/task')
-// const User = require('./models/user')
+const Task = require('./models/task')
+const User = require('./models/user')
 
-// const main = async ()=>{
-//     // const task = await Task.findById('5f69940abc342c1f00acda53')
-//     // await task.populate('owner').execPopulate()
-//     // console.log(task.owner)
-//     const user = await User.findById('5f6993d5bc342c1f00acda50')
-//     await user.populate('tasks').execPopulate()
+const main = async ()=>{
+    const task = await Task.findById("5f7321a8e8aca725dc591179")
+    // await task.populate('owner').execPopulate()
+    console.log(task.owner)
+    const user = await User.findById("5f6f7eddececdc04f45bf688").populate('tasks')
+    console.log(user.tasks)
+//    await user.populate('tasks').execPopulate()
 //     console.log(user.tasks)
-// }
+    //   console.log(user)
+}
 
 
-// main()
+main()
 // const myFunction = async() =>{
 //     const token = jwt.sign({_id:'arb2'},"This is New Genrated Token",{expiresIn: '3 weeks'})
     
